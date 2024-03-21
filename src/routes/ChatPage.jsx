@@ -36,7 +36,12 @@ function ChatPage() {
 
     return (
         <div>
-            <Navbar />
+            <Navbar links={[
+                { href: "/about", label: "About IslamKGHub" },
+                { href: "/analytics", label: "Analytics" },
+                { href: "/question-list", label: "Question List" }
+            ]} />
+
             <div className="relative rounded-lg h-[80vh] bg-customGray m-8 p-4 flex flex-col justify-between">
                 <div className="absolute top-0 left-0 right-0 flex justify-evenly mt-4">
                     <button className="bg-customBrown text-white px-4 py-2 rounded-md mr-2">About</button>

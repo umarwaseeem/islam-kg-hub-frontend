@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Navbar() {
+export default function Navbar({ links }) {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -12,15 +12,11 @@ export default function Navbar() {
             <div className="md:px-24 flex md:flex-row flex-col items-center mx-auto p-2 bg-customGreen">
                 <div className={`w-full md:block ${menuOpen ? 'block' : 'hidden'}`} id="navbar-default">
                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border bg-customGreen border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
-                        <li>
-                            <a href="/about" className="block py-2 px-3 text-white hover:text-customYellow">About IslamKGHub</a>
-                        </li>
-                        <li>
-                            <a href="/analytics" className="block py-2 px-3 text-white hover:text-customYellow">Analytics</a>
-                        </li>
-                        <li>
-                            <a href="/question-types" className="block py-2 px-3 text-white hover:text-customYellow">Question Types</a>
-                        </li>
+                        {links.map((link, index) => (
+                            <li key={index}>
+                                <a href={link.href} className="block py-2 px-3 text-white hover:text-customYellow">{link.label}</a>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 <div className="flex flex-row md:w-16 w-full justify-between items-center mt-2">
