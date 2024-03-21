@@ -2,14 +2,22 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 
 function UserMessage({ text }) {
+    const currentTime = new Date().toLocaleTimeString();
     return (
-        <div className="bg-white ml-auto p-4 rounded-xl w-3/4 rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-none">{text}</div>
+        <>
+            <div className="bg-white ml-auto p-4 rounded-xl w-3/4 rounded-tl-xl rounded-tr-xl rounded-bl-xl rounded-br-none text-right break-words">{text}</div>
+            <p className="text-black text-xs ml-auto mr-4">{currentTime}</p>
+        </>
     );
 }
 
 function SystemMessage({ text }) {
+    const currentTime = new Date().toLocaleTimeString();
     return (
-        <div className="bg-customYellow p-4 rounded-xl w-3/4 rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-xl">{text}</div>
+        <>
+            <div className="bg-customYellow p-4 rounded-xl w-3/4 rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-xl break-words">{text}</div>
+            <p className="text-black ml-2 text-xs">{currentTime}</p>
+        </>
     );
 }
 
@@ -38,7 +46,7 @@ function ChatPage() {
                 <div className="overflow-y-auto mt-16">
                     {/* Chat messages will be displayed here */}
                     <SystemMessage text={"Welcome to IslamKGHub. Ask a question related to hadith."} />;
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
                         {messages.map((msg, index) => {
                             return msg.type === 'user' ? <UserMessage key={index} text={msg.text} /> : <SystemMessage key={index} text={msg.text} />;
                         })}
