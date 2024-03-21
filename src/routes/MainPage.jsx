@@ -1,10 +1,11 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import { useEffect, useState } from 'react';
+import Footer from '../components/Footer';
 
 function RightAlignedSection({ heading, link, linkText, paragraph, boxText }) {
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col font-serif'>
             <div className={`flex md:flex-row flex-col justify-evenly my-16 mx-20`}>
                 <div className='bg-customBrown p-16 rounded-lg md:w-1/3 w-full'>
                     <h2 className='text-4xl text-white text-center'>
@@ -52,7 +53,7 @@ function LeftAlignedSection({ heading, link, linkText, paragraph, boxText }) {
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col font-serif'>
             <div className={`flex md:flex-row flex-col justify-evenly my-16 mx-20`}>
                 <div className="flex flex-col md:w-2/3 w-full mt-8 md:mr-8">
                     <h2 className='text-4xl md:text-right text-center font-bold mb-4'>{heading}</h2>
@@ -84,9 +85,13 @@ function MainPage() {
                 { href: "/analytics", label: "Analytics" },
                 { href: "/question-list", label: "Question List" }
             ]} />
-            <div className={"h-[50vh] bg-customBrown flex justify-center items-center"}>
-                <img className='m-auto' src="logo.png" height={250} width={250} alt="IslamKGHub Logo" />
+            <div className="h-[90vh] bg-customBrown flex flex-col justify-center items-center md:flex-row">
+                <img className="m-auto w-60" src="logo.png" alt="IslamKGHub Logo" />
+                <h1 className="text-white md:pb-0 pb-40 text-4xl md:text-6xl text-center md:text-left md:w-2/3 w-full mt-8 md:mt-0">
+                    <span className="font-extrabold">IslamKGHub:</span> <span className="font-serif">Exploration of Islamic Knowledge by Graph-Driven Analytics and Question Answering</span>
+                </h1>
             </div>
+
             <RightAlignedSection
                 heading={"IslamKGHub"}
                 link={"/about"}
@@ -108,7 +113,7 @@ function MainPage() {
                 paragraph={"the platform has diverse applications for people including haddith researchers, studnets and ulemas."}
                 boxText={"How to use it?"}
             />
-
+            <Footer />
         </div>
     );
 }

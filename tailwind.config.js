@@ -10,6 +10,7 @@ module.exports = {
         customYellow: '#FBD590',
         customGray: "#DAD8D6",
         customBrown: "#BB633F",
+        customRed: "#451718",
       },
     },
   },
