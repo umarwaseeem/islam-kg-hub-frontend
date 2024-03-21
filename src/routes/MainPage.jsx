@@ -1,12 +1,13 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
+import { useEffect, useState } from 'react';
 
 function RightAlignedSection({ heading, link, linkText, paragraph, boxText }) {
     return (
         <div className='flex flex-col'>
             <div className={`flex md:flex-row flex-col justify-evenly my-16 mx-20`}>
                 <div className='bg-customBrown p-16 rounded-lg md:w-1/3 w-full'>
-                    <h2 className='text-4xl text-white'>
+                    <h2 className='text-4xl text-white text-center'>
                         {boxText}
                     </h2>
                 </div>
@@ -26,6 +27,30 @@ function RightAlignedSection({ heading, link, linkText, paragraph, boxText }) {
 }
 
 function LeftAlignedSection({ heading, link, linkText, paragraph, boxText }) {
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 768);
+        };
+
+        // Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // Call handleResize initially to set the initial state
+        handleResize();
+
+        // Remove event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []); // Empty dependency array ensures the effect runs only once
+
+    // Render RightAlignedSection if it's a small screen
+    if (isSmallScreen) {
+        return <RightAlignedSection heading={heading} link={link} linkText={linkText} paragraph={paragraph} boxText={boxText} />;
+    }
+
     return (
         <div className='flex flex-col'>
             <div className={`flex md:flex-row flex-col justify-evenly my-16 mx-20`}>
@@ -39,7 +64,7 @@ function LeftAlignedSection({ heading, link, linkText, paragraph, boxText }) {
                     </a>
                 </div>
                 <div className='bg-customBrown p-16 rounded-lg md:w-1/3 w-full'>
-                    <h2 className='text-4xl text-white'>
+                    <h2 className='text-4xl text-white text-center'>
                         {boxText}
                     </h2>
                 </div>
