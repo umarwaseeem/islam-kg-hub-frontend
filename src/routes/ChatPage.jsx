@@ -26,11 +26,33 @@ function ChatPage() {
     const [message, setMessage] = useState('');
     const placeholderTextMessage = "Ask your question here";
 
-    const handleSendMessage = () => {
+    const baseURL = "http://127.0.0.1:5000/userQuery";
+
+    const handleSendMessage = async () => {
         if (message.trim() !== '') {
             const newMessages = [...messages, { text: message, type: 'user' }];
             setMessages(newMessages);
             setMessage('');
+
+            try {
+                const response = await fetch(baseURL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const systemMessage = `Response: ${data.response}`;
+                    const newMessagesWithResponse = [...newMessages, { text: systemMessage, type: 'system' }];
+                    setMessages(newMessagesWithResponse);
+                } else {
+                    throw new Error('Failed to fetch');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     };
 
