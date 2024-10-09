@@ -42,6 +42,8 @@ function ChatPage() {
                     },
                 });
 
+                console.log(response)
+
                 if (response.ok) {
                     const data = await response.json();
                     const systemMessage = `Response: ${data.response}`;
@@ -59,9 +61,11 @@ function ChatPage() {
     return (
         <div>
             <Navbar links={[
+                { href: "/", label: "Home" },
                 { href: "/about", label: "About IslamKGHub" },
+                { href: "/chat", label: "Chat" },
                 { href: "/analytics", label: "Analytics" },
-                { href: "/question-list", label: "Question List" }
+                { href: "/faqs", label: "FAQs" }
             ]} />
 
             <div className="relative rounded-lg h-[80vh] bg-customGray m-8 p-4 flex flex-col justify-between">

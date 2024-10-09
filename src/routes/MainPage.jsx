@@ -80,10 +80,11 @@ function MainPage() {
     return (
         <div>
             <Navbar links={[
+                { href: "/", label: "Home" },
                 { href: "/about", label: "About IslamKGHub" },
                 { href: "/chat", label: "Chat" },
                 { href: "/analytics", label: "Analytics" },
-                { href: "/question-list", label: "Question List" }
+                { href: "/faqs", label: "FAQs" }
             ]} />
             <div className="h-[90vh] bg-customBrown flex flex-col justify-center items-center md:flex-row">
                 <img className="m-auto w-60" src="logo.png" alt="IslamKGHub Logo" />
@@ -101,14 +102,14 @@ function MainPage() {
             />
             <LeftAlignedSection
                 heading={"Mission To"}
-                link={"/mission"}
+                link={"/about"}
                 linkText={"Read our mission statement"}
                 paragraph={"empower Islamic domain experts with an advanced question-answering and analytics platform to foster accessibility of the Islamic domain"}
                 boxText={"Mission"}
             />
             <RightAlignedSection
                 heading={"Applications"}
-                link={"/applications"}
+                link={"/analytics"}
                 linkText={"Explore our Q/A and Analytics"}
                 paragraph={"the platform has diverse applications for people including haddith researchers, studnets and ulemas."}
                 boxText={"How to use it?"}
