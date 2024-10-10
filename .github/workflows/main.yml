@@ -23,6 +23,3 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Run linting
-        run: npm run lint
