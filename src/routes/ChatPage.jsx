@@ -60,14 +60,9 @@ function ChatPage() {
     const baseURL = "http://localhost:8000/userQuery";
 
     const exampleQueries = [
-        "What is the most authentic hadith?",
-        "Tell me about the importance of prayer",
-        "Explain the concept of Zakat",
-        "What are the pillars of Islam?",
-        "Hadith about kindness to parents",
-        "Importance of seeking knowledge in Islam",
-        "Hadith about honesty in business",
-        "What does Islam say about patience?",
+        "How many hadith narrated by عبد الله بن يوسف?",
+        "Give me some hadith about prayer.",
+        "Give me some hadith by عبد الله بن يوسف.",
     ];
 
     useEffect(() => {

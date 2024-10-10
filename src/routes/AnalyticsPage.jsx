@@ -17,7 +17,6 @@ export default function AnalyticsPage() {
     const handleQuerySubmit = async () => {
         if (!selectedQuery) return;
 
-        let apiEndpoint;
         switch (selectedQuery) {
             case "Number of narrations by 5 narrators.":
                 numberOfNarrationsByNumberOfNarrators(5);
