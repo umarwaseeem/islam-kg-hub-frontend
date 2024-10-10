@@ -1,26 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
+import WaveLoader from '../components/WaveLoader'; // You'll need to create this component
 
-function UserMessage({ text }) {
-    const currentTime = new Date().toLocaleTimeString();
+function UserMessage({ text, timestamp }) {
     return (
         <div className="flex flex-col items-end mb-6 animate-fadeIn">
             <div className="bg-white ml-auto p-4 rounded-2xl w-3/4 rounded-tr-none shadow-md">
                 <p className="break-words text-gray-800">{text}</p>
             </div>
-            <span className="text-xs text-gray-500 mt-1 mr-2">{currentTime}</span>
+            <span className="text-xs text-gray-500 mt-1 mr-2">{timestamp}</span>
         </div>
     );
 }
 
-function SystemMessage({ text }) {
-    const currentTime = new Date().toLocaleTimeString();
+function SystemMessage({ text, timestamp }) {
     return (
-        <div className="flex flex-col items-start mb-6 animate-fadeIn">
+        <div className="flex flex-col items-start mb-6 animate-slideInFromLeft">
             <div className="bg-customYellow p-4 rounded-2xl w-3/4 rounded-tl-none shadow-md">
                 <p className="break-words text-gray-800">{text}</p>
             </div>
-            <span className="text-xs text-gray-500 mt-1 ml-2">{currentTime}</span>
+            <span className="text-xs text-gray-500 mt-1 ml-2">{timestamp}</span>
         </div>
     );
 }
@@ -55,9 +54,21 @@ function ChatPage() {
     const [activeChat, setActiveChat] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [showChatList, setShowChatList] = useState(!isMobile);
+    const [isLoading, setIsLoading] = useState(false);
 
     const placeholderTextMessage = "Ask your question here";
     const baseURL = "http://localhost:8000/userQuery";
+
+    const exampleQueries = [
+        "What is the most authentic hadith?",
+        "Tell me about the importance of prayer",
+        "Explain the concept of Zakat",
+        "What are the pillars of Islam?",
+        "Hadith about kindness to parents",
+        "Importance of seeking knowledge in Islam",
+        "Hadith about honesty in business",
+        "What does Islam say about patience?",
+    ];
 
     useEffect(() => {
         const handleResize = () => {
@@ -72,9 +83,11 @@ function ChatPage() {
 
     const handleSendMessage = async () => {
         if (message.trim() !== '') {
-            const newMessages = [...messages, { text: message, type: 'user' }];
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            const newMessages = [...messages, { text: message, type: 'user', timestamp: currentTime }];
             setMessages(newMessages);
             setMessage('');
+            setIsLoading(true);
 
             try {
                 const response = await fetch(baseURL, {
@@ -89,7 +102,8 @@ function ChatPage() {
                 if (response.ok) {
                     const data = await response.json();
                     const systemMessage = data.response;
-                    const newMessagesWithResponse = [...newMessages, { text: systemMessage, type: 'system' }];
+                    const responseTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                    const newMessagesWithResponse = [...newMessages, { text: systemMessage, type: 'system', timestamp: responseTime }];
                     setMessages(newMessagesWithResponse);
                 } else {
                     throw new Error('Failed to fetch');
@@ -97,8 +111,11 @@ function ChatPage() {
             } catch (error) {
                 console.error('Error:', error);
                 const errorMessage = "Sorry, there was an error processing your request.";
-                const newMessagesWithError = [...newMessages, { text: errorMessage, type: 'system' }];
+                const errorTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const newMessagesWithError = [...newMessages, { text: errorMessage, type: 'system', timestamp: errorTime }];
                 setMessages(newMessagesWithError);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
@@ -118,7 +135,7 @@ function ChatPage() {
     useEffect(scrollToBottom, [messages]);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
+        <div className="h-screen bg-gray-100 flex flex-col">
             <Navbar links={[
                 { href: "/", label: "Home" },
                 { href: "/about", label: "About IslamKGHub" },
@@ -127,24 +144,48 @@ function ChatPage() {
                 { href: "/faqs", label: "FAQs" }
             ]} />
 
-            <div className="flex-1 flex">
+            <div className="flex-1 flex overflow-hidden">
                 {/* Chat List */}
-                <div className={`w-1/4 border-r ${isMobile && !showChatList ? 'hidden' : 'block'}`}>
-                    <ChatList chats={chats} activeChat={activeChat} setActiveChat={setActiveChat} />
+                <div className={`w-1/5 border-r ${isMobile && !showChatList ? 'hidden' : 'block'} flex flex-col`}>
+                    <div className="flex-1 overflow-y-auto">
+                        <ChatList chats={chats} activeChat={activeChat} setActiveChat={setActiveChat} />
+                    </div>
                 </div>
 
                 {/* Chat UI */}
                 <div className={`flex-1 flex flex-col ${isMobile && showChatList ? 'hidden' : 'block'}`}>
-                    <div className="bg-customGray flex-1 p-4 flex flex-col">
-                        <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                            <SystemMessage text="Welcome to IslamKGHub. Ask a question related to hadith." />
-                            {messages.map((msg, index) => (
-                                msg.type === 'user' ? <UserMessage key={index} text={msg.text} /> : <SystemMessage key={index} text={msg.text} />
-                            ))}
-                            <div ref={messagesEndRef} />
+                    <div className="bg-customGray flex-1 flex flex-col overflow-hidden">
+                        {/* Scrollable chat messages */}
+                        <div className="flex-1 overflow-y-auto p-4">
+                            <div className="space-y-4 mb-4">
+                                <SystemMessage text="Welcome to IslamKGHub. Ask a question related to hadith." timestamp="" />
+                                {messages.map((msg, index) => (
+                                    msg.type === 'user' ? <UserMessage key={index} text={msg.text} timestamp={msg.timestamp} /> : <SystemMessage key={index} text={msg.text} timestamp={msg.timestamp} />
+                                ))}
+                                {isLoading && <WaveLoader />}
+                                <div ref={messagesEndRef} />
+                            </div>
                         </div>
 
-                        <div className="border-t border-gray-200 pt-4">
+                        {/* Fixed bottom section */}
+                        <div className="border-t border-gray-200 bg-white p-4">
+                            {/* Example Queries */}
+                            <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md">
+                                <h3 className="font-semibold mb-2 text-customGreen">Example Queries:</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {exampleQueries.map((query, index) => (
+                                        <button
+                                            key={index}
+                                            className="bg-white text-customGreen border border-customGreen rounded-full px-4 py-2 text-sm hover:bg-customGreen hover:text-white transition-colors duration-300"
+                                            onClick={() => setMessage(query)}
+                                        >
+                                            {query}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Message Input */}
                             <div className="flex items-center space-x-2">
                                 <input
                                     type="text"
@@ -155,7 +196,7 @@ function ChatPage() {
                                     onKeyPress={handleKeyPress}
                                 />
                                 <button
-                                    className="bg-customGreen text-white px-6 py-3 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
+                                    className="bg-customBrown text-white px-6 py-3 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-customGreen focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
                                     onClick={handleSendMessage}
                                 >
                                     Send
